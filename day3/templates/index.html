@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ name }}'s Read list</title>
+</head>
+<body>
+    <h2>{{ name }}'s Book Read list</h2>
+    {# use length filter toobtain books variable's length #}
+    <p>{{ books|length }} Titles</p>
+    <ul>
+        {% for book in books %}  {# iterator books variable #}
+        <li>{{ book.title }} - {{ book.year }}</li>  {# same as book['title'] #}
+        {% endfor %}  {# use endfor end mark for code #}
+    </ul>
+    <footer>
+        <small>&copy; 2022 <a href="https://flask.palletsprojects.com/en/2.2.x/">HelloFlask</a></small>
+    </footer>
+</body>
+</html>
