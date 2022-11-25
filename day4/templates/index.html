@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}"> </head>
+    <title>{{ name }}'s Read list</title>
+</head>
+<body>
+    <h2>
+        <img alt="Avatar", class="avatar"  src="{{ url_for('static', filename='images/panda.png') }}">
+        {{ name }}'s Book Read list
+    </h2>
+    {# use length filter toobtain books variable's length #}
+    <p>{{ books|length }} Titles</p>
+    <ul class="book-list" >
+        {% for book in books %}  {# iterator books variable #}
+        <li>{{ book.title }} - {{ book.year }}</li>  {# same as book['title'] #}
+        {% endfor %}  {# use endfor end mark for code #}
+    </ul>
+    <footer>
+        <img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro-exercising.gif') }}"> 
+        <small>&copy; 2022 <a href="https://flask.palletsprojects.com/en/2.2.x/">HelloFlask</a></small>
+    </footer>
+</body>
+</html>
