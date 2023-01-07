@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>{{ books|length }} Titles</p>
+<ul class="book-list">
+    {% for book in books %}
+    <li>{{ book.title }} - {{ book.year }}
+        <span class="float-right">
+            <a class="amazon" href="https://www.amazon.com/s?k={{ book.title }}" target="_blank" title="Find this book on amazon">Amazon</a>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro-exercising.gif') }}" title="to~to~ro~">
+{% endblock %}
