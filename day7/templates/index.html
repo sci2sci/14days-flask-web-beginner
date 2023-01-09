@@ -7,8 +7,13 @@
     <input class="btn" type="submit" name="submit" value="Add">
 </form>
 <ul class="book-list">
+    {% for book in books %}
     <li>{{ book.title }} - {{ book.year }}
         <span class="float-right">
+            <a class="btn" href="{{ url_for('edit', book_id=book.id) }}">Edit</a>
+            <form class="inline-form" method="post" action="{{ url_for('delete', book_id=book.id) }}">
+                <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
+            </form>
             <a class="amazon" href="https://www.amazon.com/s?k={{ book.title }}" target="_blank" title="Find this book on amazon">Amazon</a>
         </span>
     </li>
