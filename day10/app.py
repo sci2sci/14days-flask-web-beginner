@@ -3,6 +3,8 @@ from flask import request, url_for, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user,login_required, logout_user, current_user
+from datetime import datetime
+from flask_moment import Moment
 
 import os,sys
 import click
@@ -23,6 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'da
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # close the model track
 # db instance
 db = SQLAlchemy(app)
+moment = Moment(app)
 
 class User(db.Model, UserMixin):  # table name is user（
     id = db.Column(db.Integer, primary_key=True)  # key
@@ -35,6 +38,12 @@ class User(db.Model, UserMixin):  # table name is user（
 
     def validate_password(self, password):  # valid password 
         return check_password_hash(self.password_hash, password)  # return boolean value
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    body = db.Column(db.String(200))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
 @app.cli.command()
 @click.option('--username', prompt=True, help='The username used to login.')
@@ -192,6 +201,27 @@ def settings():
 
     return render_template('settings.html')
 
+
+@app.route('/comment', methods=['get', 'post'])
+def comment():
+    if request.method == 'POST':
+        name = request.form['name']
+        body = request.form['body']
+
+        if not name or not body or len(name) > 20 or len(body) > 300:
+            flash('the input format is wrong too long or too short')
+            return redirect(url_for('comment'))
+
+        # save the form message to the database
+        message = Message(name=name, body=body)
+        db.session.add(message)
+        db.session.commit()
+        flash('Your message is sent to the world！')
+        return redirect(url_for('comment'))
+
+    messages = Message.query.order_by(Message.timestamp.desc()).all()
+    print(messages[0].timestamp)
+    return render_template('comment.html', messages=messages)
 
 @app.cli.command()
 def forge():
